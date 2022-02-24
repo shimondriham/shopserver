@@ -1,0 +1,69 @@
+[{
+  "_id": {
+    "$oid": "61e53606d1f478117bfca5c0"
+  },
+  "name": "xbox series s",
+  "info": "Good Xbox of the new generation",
+  "price": 900,
+  "img_url": "https://images.pexels.com/photos/2106216/pexels-photo-2106216.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "cat_short_id": "156125",
+  "date_created": {
+    "$date": "2022-01-17T09:25:17.234Z"
+  },
+  "condition": "like_new",
+  "qty": 1,
+  "user_id": "61deb982d83384c7ecf3ce0d",
+  "short_id": "206899",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61e53671d1f478117bfca5c3"
+  },
+  "name": "Playstation 5",
+  "info": "Good Playstation of the new generation",
+  "price": 2400,
+  "img_url": "https://images.pexels.com/photos/4219883/pexels-photo-4219883.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "cat_short_id": "156125",
+  "date_created": {
+    "$date": "2022-01-17T09:25:17.234Z"
+  },
+  "condition": "like new",
+  "qty": 1,
+  "user_id": "61deb982d83384c7ecf3ce0d",
+  "short_id": "756717",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61e5369ed1f478117bfca5c6"
+  },
+  "name": "Nintendo switch",
+  "info": "Good Nintendo of the new generation",
+  "price": 1100,
+  "img_url": "https://images.pexels.com/photos/371924/pexels-photo-371924.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "cat_short_id": "156125",
+  "date_created": {
+    "$date": "2022-01-17T09:25:17.234Z"
+  },
+  "condition": "used",
+  "qty": 1,
+  "user_id": "61deb982d83384c7ecf3ce0d",
+  "short_id": "58430",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61e53729d1f478117bfca5c9"
+  },
+  "name": "Toyota Corola 1998",
+  "info": "The corola of the good old generation",
+  "price": 10000,
+  "img_url": "https://images.pexels.com/photos/205337/pexels-photo-205337.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "cat_short_id": "97548",
+  "date_created": {
+    "$date": "2022-01-17T09:25:17.234Z"
+  },
+  "condition": "used",
+  "qty": 1,
+  "user_id": "61deb982d83384c7ecf3ce0d",
+  "short_id": "460708",
+  "__v": 0
+}]
