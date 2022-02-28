@@ -2,6 +2,7 @@ const express = require("express");
 const {random} = require("lodash");
 const { authAdmin } = require("../middlewares/auth");
 const { validateCategory, CategoryModel } = require("../models/categoryModel");
+const {  ProductModel } = require("../models/productModel");
 const router = express.Router();
 
 //get all categorys
@@ -72,9 +73,10 @@ router.put("/:idEdit", authAdmin , async(req,res) => {
 //Delete category 
 router.delete("/:idDelete", authAdmin , async(req,res) => {
   try{
-    let idDelete = req.params.idDelete
-    let data = await CategoryModel.deleteOne({_id:idDelete});
-    res.json(data);
+    let idDelete = req.params.idDelete 
+    let dataProducts = await ProductModel.deleteMany({cat_short_id:idDelete})
+    let dataCategory = await CategoryModel.deleteOne({short_id:idDelete});  
+    res.json({dataProducts,dataCategory});
   }
   catch(err){
     console.log(err);
