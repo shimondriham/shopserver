@@ -1,5 +1,5 @@
 const express = require("express");
-const { auth, authAdmin } = require("../middlewares/auth");
+const { auth, authAdmin, payPalAuth } = require("../middlewares/auth");
 const { validateOrder, OrderModel } = require("../models/orderModel");
 const { ProductModel } = require("../models/productModel");
 const { UserModel } = require("../models/userModel");
@@ -31,6 +31,17 @@ router.get("/allOrders", authAdmin, async(req,res) => {
   }
 })
 
+router.get("/allOrdersCount" , auth , async(req,res) => {
+  try{
+    let amount = await OrderModel.countDocuments({});
+    res.json({amount})
+  }
+  catch(err){ 
+    console.log(err);
+    return res.status(500).json(err);
+  }
+})
+
 // route get user orders
 router.get("/userOrder", auth , async(req,res) => {
   try{
@@ -45,6 +56,7 @@ router.get("/userOrder", auth , async(req,res) => {
   }
 })
 
+// get info about products in single order by order id
 router.get("/productsInfo/:idOrder", auth,async(req,res) => {
   try{
     let order = await OrderModel.findOne({_id:req.params.idOrder});
@@ -104,6 +116,14 @@ router.patch("/orderPaid/", auth ,  async(req,res) => {
  
   // let orderId = req.params.orderId;
   try{
+    // 0. check if paypal really do the transction with token and orderID
+    let tokenId = req.body.tokenId;
+    let orderId = req.body.orderId;
+    let realPay = (req.body.realPay == "yes") // false or true
+    let paypalData = await payPalAuth(tokenId,orderId,realPay)
+    if(paypalData.status != "COMPLETED"){
+      return res.status(401).json({err_msg:"There problem in the payment"})
+    }
     // 1. find the id of the current order by pendinf and user_id
     let currentOrder = await OrderModel.findOne({status:"pending", user_id:req.tokenData._id})
     let shortProds_ids = currentOrder.products_ar.map(item => {
@@ -113,7 +133,7 @@ router.patch("/orderPaid/", auth ,  async(req,res) => {
     let prods_ar = await ProductModel.find({short_id:{$in:shortProds_ids}})
     // loop on all products and
     prods_ar.forEach(async(item) => {
-      // TODO: update the products qty in -1
+    // update the products qty in -1
       item.qty -= 1;
       let prodUpdate = await ProductModel.updateOne({_id:item._id},item)
     })
