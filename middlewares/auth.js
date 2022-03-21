@@ -2,6 +2,8 @@ const axios = require("axios");
 const jwt = require("jsonwebtoken");
 const { secret } = require("../config/config");
 
+
+// Checks if the user has a token
 exports.auth = (req,res,next) => {
   let token = req.header("x-api-key");
   if(!token){
@@ -17,6 +19,8 @@ exports.auth = (req,res,next) => {
   }
 }
 
+
+// Checks if the user has a token admin
 exports.authAdmin = (req,res,next) => {
   let token = req.header("x-api-key");
   if(!token){
@@ -39,8 +43,8 @@ exports.authAdmin = (req,res,next) => {
 }
 
 
+
 exports.payPalAuth = async (_tokenId, _orderId, _ifRealPay = true) => {
-  
   let url = !_ifRealPay ? "https://api-m.sandbox.paypal.com/v2/checkout/orders/" + _orderId : "https://api-m.paypal.com/v2/checkout/orders/" + _orderId;
   try {
     let resp = await axios({

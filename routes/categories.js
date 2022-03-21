@@ -5,6 +5,7 @@ const { validateCategory, CategoryModel } = require("../models/categoryModel");
 const {  ProductModel } = require("../models/productModel");
 const router = express.Router();
 
+
 //get all categorys
 router.get("/", async(req,res) => {
   let perPage = req.query.perPage || 20;
@@ -20,6 +21,7 @@ router.get("/", async(req,res) => {
     res.status(500).json(err)
   }
 })
+
 
 //get 1 category
 router.get("/single/:url_name", async(req,res) => {
@@ -42,7 +44,7 @@ router.post("/", authAdmin , async(req,res) => {
   }
   try{
     let category = new CategoryModel(req.body);
-    category.short_id = await genShortId(); // 0 -999999 that not in use in another category
+    category.short_id = await genShortId(); 
     await category.save();
     res.status(201).json(category);
   }
@@ -85,7 +87,7 @@ router.delete("/:idDelete", authAdmin , async(req,res) => {
 })
 
 
-
+// short ID for category
 const genShortId = async() => {
   let flag = true; 
   let rnd;

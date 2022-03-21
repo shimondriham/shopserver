@@ -6,6 +6,6 @@ main().catch(err => console.log(err));
 async function main() {
  
   await mongoose.connect(`mongodb+srv://${secret.userDb}:${secret.passDb}@cluster0.frzne.mongodb.net/shop`);
-  console.log("mongo connected shop!!!");
+  console.log("mongo gaming world connected ");
 }
 

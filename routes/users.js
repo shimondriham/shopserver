@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt")
 const { validateUser, UserModel, validateLogin, genToken } = require("../models/userModel");
 const { auth , authAdmin} = require("../middlewares/auth");
+const { OrderModel } = require("../models/orderModel");
 const router = express.Router();
 
 
@@ -9,7 +10,8 @@ router.get("/", (req,res) => {
   res.json({msg:"Users work"})
 })
 
-// get users List
+
+// get users List for admin only
 router.get("/usersList", authAdmin,async(req, res) => {
   let perPage = req.query.perPage || 20;
   let page = req.query.page >= 1 ? req.query.page - 1 : 0;
@@ -26,12 +28,13 @@ router.get("/usersList", authAdmin,async(req, res) => {
 })
 
 
+// Checks if the user has an appropriate token
 router.get("/checkUserToken", auth , async(req,res) => {
   res.json({status:"ok",msg:"token is good",tokenData:req.tokenData})
 })
 
 
-//get myInfo
+//get Info About current user
 router.get("/myInfo", auth,async(req,res) => {
   try{
     let data = await UserModel.findOne({_id:req.tokenData._id},{password:0})
@@ -77,8 +80,6 @@ router.post("/" , async(req,res) => {
     user.password = await bcrypt.hash(user.password, 10);
     await user.save();
     user.password = "*****";
-    // allow me to pick the keys of object i want to show to client side
-    // let userObj = pick(user,["_id","name","email","address","role"])
     return res.status(201).json(user);
   }
   catch(err){
@@ -97,7 +98,6 @@ router.post("/login" , async(req,res) => {
     return res.status(400).json(validBody.error.details);
   }
   try{
-    // check if there user with that email
     let user = await UserModel.findOne({email:req.body.email})
     if(!user){
       return res.status(401).json({err:"User not found!"});
@@ -113,5 +113,20 @@ router.post("/login" , async(req,res) => {
     return res.status(500).json(err);
   }
 })
+
+// Deleting a user and his orders
+router.delete("/:idDelete", authAdmin , async(req,res) => {
+  try{
+    let idDelete = req.params.idDelete 
+    let dataOrderDel = await OrderModel.deleteMany({user_id:idDelete})
+    let dataUserDel = await UserModel.deleteOne({_id:idDelete});  
+    res.json({dataUserDel,dataOrderDel});
+  }
+  catch(err){
+    console.log(err);
+    return res.status(500).json(err);
+  }
+})
+
 
 module.exports = router;

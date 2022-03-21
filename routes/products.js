@@ -6,7 +6,7 @@ const router = express.Router();
 
 // get all products with this id category (if not found get all products)
 router.get("/", async(req,res) => {
-  let perPage = req.query.perPage || 5;
+  let perPage = req.query.perPage || 8;
   let page = req.query.page >= 1 ? req.query.page - 1 : 0;
   let sort = req.query.sort || "_id";
   let reverse = req.query.reverse == "yes" ? 1 : -1;
@@ -41,7 +41,7 @@ router.get("/single/:id", async(req,res) => {
   }
 })
 
-
+// get amount  for pagenaition
 router.get("/amount", async(req,res) => {
   try{
     let cat = req.query.cat || null
@@ -78,6 +78,7 @@ router.get("/search", async(req,res) => {
 })
 
 
+// get Products you were interested in
 router.get("/visited", async(req,res) => {
   let visited = req.query.visited
   let visited_ar = visited.split(",") 
@@ -110,6 +111,7 @@ router.post("/",authAdmin , async(req,res) => {
     return res.status(500).json(err);
   }
 })
+
 
 // update
 router.put("/:idEdit",authAdmin , async(req,res) => {

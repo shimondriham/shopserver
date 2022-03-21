@@ -16,7 +16,6 @@ router.get("/allOrders", authAdmin, async(req,res) => {
   let sort = req.query.sort || "_id";
   let reverse = req.query.reverse == "yes" ? 1 : -1;
   let user_id = req.query.user_id;
-  
   try{
     let filter = user_id ? {user_id:user_id} : {}
     let data = await OrderModel.find(filter)
@@ -31,6 +30,7 @@ router.get("/allOrders", authAdmin, async(req,res) => {
   }
 })
 
+// for pageination
 router.get("/allOrdersCount" , auth , async(req,res) => {
   try{
     let amount = await OrderModel.countDocuments({});
@@ -60,10 +60,8 @@ router.get("/userOrder", auth , async(req,res) => {
 router.get("/productsInfo/:idOrder", auth,async(req,res) => {
   try{
     let order = await OrderModel.findOne({_id:req.params.idOrder});
-    // prodShortIds_ar = [33213,12211]
     let prodShortIds_ar = order.products_ar.map(item => item.s_id);
     let products = await ProductModel.find({short_id:{$in:prodShortIds_ar}})
-    // return also the products query, and the order query
     res.json({products,order});
   }
   catch(err){
@@ -79,15 +77,12 @@ router.post("/", auth, async(req,res) => {
     return res.status(400).json(validBody.error.details);
   }
   try{
-    // get data from user
     let user = await UserModel.findOne({_id:req.tokenData._id});
     console.log(user)
-// add new props to the body before save or update
     req.body.name = user.name;
     req.body.address = user.address;
     req.body.phone = user.phone;
     req.body.email = user.email;
-
 
     // check if there already order of the same user that pending
     let order = await OrderModel.findOne({user_id:req.tokenData._id,status:"pending"})
@@ -124,7 +119,7 @@ router.patch("/orderPaid/", auth ,  async(req,res) => {
     if(paypalData.status != "COMPLETED"){
       return res.status(401).json({err_msg:"There problem in the payment"})
     }
-    // 1. find the id of the current order by pendinf and user_id
+    // 1. find the id of the current order by pending and user_id
     let currentOrder = await OrderModel.findOne({status:"pending", user_id:req.tokenData._id})
     let shortProds_ids = currentOrder.products_ar.map(item => {
       return item.s_id
